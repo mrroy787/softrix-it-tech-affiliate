@@ -1,0 +1,7 @@
+ "use client";
+import { useState } from "react";
+import Link from "next/link";
+import { createClient } from "@/lib/supabase-browser";
+export default function Login(){const [email,setEmail]=useState("");const [password,setPassword]=useState("");const [message,setMessage]=useState("");const [busy,setBusy]=useState(false);
+async function submit(e:React.FormEvent){e.preventDefault();setBusy(true);setMessage("");const supabase=createClient();const {error}=await supabase.auth.signInWithPassword({email,password});setBusy(false);if(error){setMessage(error.message);return}location.href="/admin"}
+return <main className="wrap"><div className="login form-card"><Link className="logo" href="/">SOFTRIX <b>IT TECH</b></Link><h1>Admin Login</h1><p className="muted">Sign in with the admin account created in Supabase.</p><form onSubmit={submit}><div className="field"><label>Admin email</label><input type="email" value={email} onChange={e=>setEmail(e.target.value)} required autoComplete="username"/></div><div className="field"><label>Password</label><input type="password" value={password} onChange={e=>setPassword(e.target.value)} required autoComplete="current-password"/></div><button className="btn" disabled={busy}>{busy?"Signing in…":"Sign in securely"}</button>{message&&<p className="error">{message}</p>}</form><p className="small">Public sign-ups should be disabled in Supabase Auth settings.</p></div></main>}
